@@ -15,20 +15,24 @@ echo "<li><b>" . elgg_echo('spam_throttle:delete') . "</b> - " . elgg_echo('spam
 
 // globals
 $title = elgg_echo('spam_throttle:settings:global');
-$body = elgg_view('input/text', array(
+
+$body = elgg_view_field([
+	'#type' => 'text',
 	'name' => 'params[global_limit]',
 	'value' => $vars['entity']->global_limit,
-));
-$body .= " " . elgg_echo('spam_throttle:helptext:limit', array(elgg_echo('spam_throttle:new_content'))) . "<br>";
+	'#help' => elgg_echo('spam_throttle:helptext:limit', array(elgg_echo('spam_throttle:new_content'))),
+]);
 
-$body .= elgg_view('input/text', array(
+$body .= elgg_view_field([
+	'#type' => 'text',
 	'name' => 'params[global_time]',
 	'value' => $vars['entity']->global_time,
-));
-$body .= " " . elgg_echo('spam_throttle:helptext:time') . '<br><br>';
+	'#help' => elgg_echo('spam_throttle:helptext:time'),
+]);
 
 // action to perform if threshold is broken
-$body .= elgg_view('input/select', array(
+$body .= elgg_view_field([
+	'#type' => 'select',
 	'name' => 'params[global_consequence]',
 	'value' => $vars['entity']->global_consequence ? $vars['entity']->global_consequence : 'suspend',
 	'options_values' => array(
@@ -36,9 +40,9 @@ $body .= elgg_view('input/select', array(
 		'suspend' => elgg_echo('spam_throttle:suspend'),
 		'ban' => elgg_echo('spam_throttle:ban'),
 		'delete' => elgg_echo('spam_throttle:delete')
-	)
-));
-$body .= elgg_echo('spam_throttle:consequence:title', array(elgg_echo('spam_throttle:global')));
+	),
+	'#help' => elgg_echo('spam_throttle:consequence:title', array(elgg_echo('spam_throttle:global'))),
+]);
 echo elgg_view_module('main', $title, $body);
 
 
@@ -50,24 +54,28 @@ $registered_types['object'][] = 'messages';
 foreach ($registered_types as $type => $subtypes) {
 	if ($subtypes) {
 		foreach ($subtypes as $subtype) {
-			$attr = $type . ':' . $subtype . '_limit';
 			$title = elgg_echo('spam_throttle:settings:subtype', array(elgg_echo("item:{$type}:{$subtype}")));
-			$body = elgg_view('input/text', array(
+			
+			$attr = $type . ':' . $subtype . '_limit';
+			$body = elgg_view_field([
+				'#type' => 'text',
 				'name' => "params[{$attr}]",
 				'value' => $vars['entity']->$attr,
-			));
-			$body .= ' ' . elgg_echo('spam_throttle:helptext:limit', array(elgg_echo("item:{$type}:{$subtype}"))) . "<br>";
+				'#help' => elgg_echo('spam_throttle:helptext:limit', array(elgg_echo("item:{$type}:{$subtype}"))),
+			]);
 
 			$attr = $type . ':' . $subtype . '_time';
-			$body .= elgg_view('input/text', array(
+			$body .= elgg_view_field([
+				'#type' => 'text',
 				'name' => "params[{$attr}]",
 				'value' => $vars['entity']->$attr,
-			));
-			$body .= " " . elgg_echo('spam_throttle:helptext:time') . '<br><br>';
+				'#help' => elgg_echo('spam_throttle:helptext:time'),
+			]);
 		
 			// action to perform if threshold is broken
 			$attr = $type . ':' . $subtype . '_consequence';
-			$body .= elgg_view('input/select', array(
+			$body .= elgg_view_field([
+				'#type' => 'select',
 				'name' => "params[{$attr}]",
 				'value' => $vars['entity']->$attr ? $vars['entity']->$attr : 'suspend',
 				'options_values' => array(
@@ -75,31 +83,35 @@ foreach ($registered_types as $type => $subtypes) {
 					'suspend' => elgg_echo('spam_throttle:suspend'),
 					'ban' => elgg_echo('spam_throttle:ban'),
 					'delete' => elgg_echo('spam_throttle:delete')
-				)
-			));
-			$body .= elgg_echo('spam_throttle:consequence:title', array(elgg_echo("item:{$type}:{$subtype}")));
+				),
+				'#help' => elgg_echo('spam_throttle:consequence:title', array(elgg_echo("item:{$type}:{$subtype}"))),
+			]);
 			echo elgg_view_module('main', $title, $body);
 		}
 	}
 	else {
-		$attr = $type . '_limit';
 		$title = elgg_echo('spam_throttle:settings:subtype', array(ucfirst($type)));
-		$body = elgg_view('input/text', array(
+
+		$attr = $type . '_limit';
+		$body = elgg_view_field([
+			'#type' => 'text',
 			'name' => "params[{$attr}]",
 			'value' => $vars['entity']->$attr,
-		));
-		$body .= ' ' . elgg_echo('spam_throttle:helptext:limit', array(ucfirst($type))) . "<br>";
+			'#help' => elgg_echo('spam_throttle:helptext:limit', array(ucfirst($type))),
+		]);
 
 		$attr = $type . '_time';
-		$body .= elgg_view('input/text', array(
+		$body .= elgg_view_field([
+			'#type' => 'text',
 			'name' => "params[{$attr}]",
 			'value' => $vars['entity']->$attr,
-		));
-		$body .= " " . elgg_echo('spam_throttle:helptext:time') . '<br><br>';
+			'#help' => elgg_echo('spam_throttle:helptext:time'),
+		]);
 		
 		// action to perform if threshold is broken
 		$attr = $type . '_consequence';
-		$body .= elgg_view('input/select', array(
+		$body .= elgg_view_field([
+			'#type' => 'select',
 			'name' => "params[{$attr}]",
 			'value' => $vars['entity']->$attr ? $vars['entity']->$attr : 'suspend',
 			'options_values' => array(
@@ -107,32 +119,31 @@ foreach ($registered_types as $type => $subtypes) {
 				'suspend' => elgg_echo('spam_throttle:suspend'),
 				'ban' => elgg_echo('spam_throttle:ban'),
 				'delete' => elgg_echo('spam_throttle:delete')
-			)
-		));
-		$body .= elgg_echo('spam_throttle:consequence:title', array(ucfirst($type)));
+			),
+			'#help' => elgg_echo('spam_throttle:consequence:title', array(ucfirst($type))),
+		]);
+		
 		echo elgg_view_module('main', $title, $body);
 	}
 }
 
 
 // length of time of a suspension
-echo "<h2>" . elgg_echo('spam_throttle:suspensiontime') . "</h2><br>";
-echo elgg_view('input/text', array(
+echo elgg_view_field([
+	'#label' => elgg_echo('spam_throttle:suspensiontime'),
+	'#type' => 'text',
 	'name' => 'params[suspensiontime]',
 	'value' => isset($vars['entity']->suspensiontime) ? $vars['entity']->suspensiontime : 24,
-));
-echo " " . elgg_echo('spam_throttle:helptext:suspensiontime') . "<br><br>";
+	'#help' => elgg_echo('spam_throttle:helptext:suspensiontime'),
+]);
 
 // period for reporting, once in x hours to pre
-echo "<h2>" . elgg_echo('spam_throttle:reporttime') . "</h2><br>";
-echo elgg_view('input/text', array(
+echo elgg_view_field([
+	'#label' => elgg_echo('spam_throttle:reporttime'),
+	'#type' => 'text',
 	'name' => 'params[reporttime]',
-	'value' => isset($vars['entity']->reporttime) ? $vars['entity']->reporttime : 24
-));
-echo " " . elgg_echo('spam_throttle:helptext:reporttime') . "<br><br>";
+	'value' => isset($vars['entity']->reporttime) ? $vars['entity']->reporttime : 24,
+	'#help' => elgg_echo('spam_throttle:helptext:reporttime'),
+]);
 
 ?>
-
-<script>
-	$('input[type="text"]').css('width', '50px');
-</script>
