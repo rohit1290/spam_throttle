@@ -181,8 +181,7 @@ function limit_exceeded() {
 	}
 
 	if ($sendreport) {
-		$report = new \ElggObject;
-		$report->setSubtype('reported_content');
+		$report = new \ElggReportedContent;
 		$report->owner_guid = $user->guid;
 		$report->title = elgg_echo('spam_throttle');
 		$report->address = $user->getURL();
